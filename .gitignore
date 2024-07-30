@@ -1,0 +1,30 @@
+# Ignorar el entorno virtual
+env/
+venv/
+.venv/
+
+# Ignorar archivos y directorios de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignorar archivos y directorios de Django
+*.log
+*.pot
+*.pyc
+.Python
+db.sqlite3
+db.sqlite3-journal
+media
+staticfiles
+
+# Ignorar archivos específicos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar configuraciones de IDEs y editores
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
