@@ -11,6 +11,6 @@ urlpatterns = [
     path('post/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html', next_page='private_area'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='post_list'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),  # Redirigir a login después de logout
     path('private/', views.private_area, name='private_area'),
 ]
