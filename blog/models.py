@@ -1,3 +1,5 @@
+# blog/models.py
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
@@ -34,6 +36,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Post(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=255)
+    keywords = models.CharField(max_length=255, default='')  # Añadir campo de keywords
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

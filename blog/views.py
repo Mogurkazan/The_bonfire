@@ -2,8 +2,10 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.views import generic
+from .forms import PostForm, CommentForm, CustomUserCreationForm
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
 
 def post_list(request):
     posts = Post.objects.all()
@@ -41,3 +43,13 @@ def add_comment(request, pk):
     else:
         form = CommentForm()
     return render(request, 'blog/add_comment.html', {'form': form})
+
+class SignUpView(generic.CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
+
+@login_required
+def private_area(request):
+    posts = Post.objects.filter(author=request.user)
+    return render(request, 'blog/private_area.html', {'posts': posts})
