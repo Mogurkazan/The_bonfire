@@ -1,0 +1,8 @@
+<!-- blog/templates/blog/comments_list.html -->
+
+{% for comment in comments %}
+    <div class="comment">
+        <strong>{{ comment.author.nickname }}</strong>
+        <p>{{ comment.content }}</p>
+    </div>
+{% endfor %}

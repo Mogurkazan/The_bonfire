@@ -1,11 +1,13 @@
-# blog/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import PostForm, CommentForm, CustomUserCreationForm
 from .models import Post, Comment
+from .forms import PostForm, CommentForm, CustomUserCreationForm
+
+
+##########POSTS###############
 
 def post_list(request):
     posts = Post.objects.all()
@@ -13,8 +15,7 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = post.comments.all()
-    return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
+    return render(request, 'blog/post_detail.html', {'post': post})
 
 @login_required
 def post_create(request):
@@ -28,6 +29,8 @@ def post_create(request):
     else:
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
+
+#######COMMENTS####################
 
 @login_required
 def add_comment(request, pk):
@@ -43,6 +46,11 @@ def add_comment(request, pk):
     else:
         form = CommentForm()
     return render(request, 'blog/add_comment.html', {'form': form})
+
+def load_comments(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments = post.comments.all()
+    return render(request, 'blog/comments_list.html', {'comments': comments})
 
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm

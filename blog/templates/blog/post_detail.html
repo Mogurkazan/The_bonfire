@@ -4,18 +4,15 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ post.title }}</h1>
+    <h2>{{ post.title }}</h2>
     <p>{{ post.content }}</p>
-    <p><strong>Keywords:</strong> {{ post.keywords }}</p>
-    <h2>Comentarios</h2>
-    <ul class="list-group">
-        {% for comment in comments %}
-            <li class="list-group-item">
-                <p>{{ comment.content }}</p>
-                <small class="text-muted">{{ comment.created_at }}</small>
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'add_comment' post.pk %}" class="btn btn-primary">Añadir comentario</a>
+    <button class="btn btn-secondary" hx-get="{% url 'load_comments' post.pk %}" hx-target="#comments-container" hx-swap="innerHTML">Comments</button>
+    <div id="comments-container"></div>
+    <h3>Add a comment</h3>
+    <form method="post" action="{% url 'add_comment' post.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
 </div>
 {% endblock %}

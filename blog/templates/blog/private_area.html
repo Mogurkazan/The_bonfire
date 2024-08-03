@@ -4,15 +4,22 @@
 
 {% block content %}
 <div class="container">
-    <h2>Mis Posts</h2>
-    <a class="btn btn-primary" href="{% url 'post_create' %}">Crear Nuevo Post</a>
-    <ul class="list-group mt-3">
-        {% for post in posts %}
-            <li class="list-group-item">
-                <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
-                <small class="text-muted">{{ post.created_at }}</small>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col-md-3">
+            <h2>Mis Posts</h2>
+            <a class="btn btn-primary mb-3" href="{% url 'post_create' %}">Crear Nuevo Post</a>
+        </div>
+        <div class="col-md-9">
+            <ul class="list-group">
+                {% for post in posts %}
+                    <li class="list-group-item">
+                        <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+                        <p><strong>Keywords:</strong> {{ post.keywords }}</p>
+                        <p><strong>Publication Date:</strong> {{ post.created_at }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
