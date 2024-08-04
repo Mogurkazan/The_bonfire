@@ -69,11 +69,10 @@ def post_edit(request, pk):
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if post.author != request.user:
-        return redirect('post_detail', pk=pk)
-    if request.method == 'POST':
-        post.delete()
-        return redirect('post_list')
-    return render(request, 'blog/post_confirm_delete.html', {'post': post})
+        return redirect('post_list')  # or some other appropriate response
+    post.delete()
+    next_url = request.GET.get('next', 'post_list')
+    return redirect(next_url)
 
 
 ########FAVORITES############

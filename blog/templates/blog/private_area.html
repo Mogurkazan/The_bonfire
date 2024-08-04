@@ -21,7 +21,7 @@
                         </div>
                         <div>
                             <a href="{% url 'post_edit' post.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{% url 'post_delete' post.pk %}" method="post" style="display:inline;">
+                            <form action="{% url 'post_delete' post.pk %}?next={% url 'private_area' %}" method="post" style="display:inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
