@@ -1,12 +1,29 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container">
     <h2>{{ post.title }}</h2>
+    
+    <!-- Dropdown de banderas -->
+    <div class="dropdown mb-3">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Translate
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'EN' %}"><img src="{% static 'blog/images/flags/uk.png' %}" alt="English" width="20"> English</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'ES' %}"><img src="{% static 'blog/images/flags/spain.png' %}" alt="Spanish" width="20"> Español</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'FR' %}"><img src="{% static 'blog/images/flags/france.png' %}" alt="French" width="20"> Français</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'DE' %}"><img src="{% static 'blog/images/flags/germany.png' %}" alt="German" width="20"> Deutsch</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'IT' %}"><img src="{% static 'blog/images/flags/italy.png' %}" alt="Italian" width="20"> Italiano</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'PT' %}"><img src="{% static 'blog/images/flags/portugal.png' %}" alt="Portuguese" width="20"> Português</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'ZH' %}"><img src="{% static 'blog/images/flags/china.png' %}" alt="Chinese" width="20"> 中文</a>
+            <a class="dropdown-item" href="{% url 'translate_post' post.pk 'JA' %}"><img src="{% static 'blog/images/flags/japon.png' %}" alt="Japanese" width="20"> 日本語</a>
+        </div>
+    </div>
+    
     {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 100%;">
-    {% else %}
-        <p>No image available for this post.</p>
     {% endif %}
     <p>{{ post.content }}</p>
     <button class="btn btn-secondary" hx-get="{% url 'load_comments' post.pk %}" hx-target="#comments-container" hx-swap="innerHTML">Comments</button>
@@ -18,13 +35,6 @@
             Favorite
         {% endif %}
     </a>
-    {% if post.author == request.user %}
-        <a href="{% url 'post_edit' post.pk %}" class="btn btn-warning">Edit</a>
-        <form action="{% url 'post_delete' post.pk %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    {% endif %}
     <h3>Add a comment</h3>
     <form method="post" action="{% url 'add_comment' post.pk %}">
         {% csrf_token %}

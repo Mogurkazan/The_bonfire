@@ -104,7 +104,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'  # Asegúrate de que la URL estática esté correctamente configurada.
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blog', 'static')]
+ 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -124,3 +126,6 @@ cloudinary.config(
 )
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# DeepL API Key
+DEEPL_API_KEY = '18f99540-fef7-4742-b119-fc4255376947:fx'

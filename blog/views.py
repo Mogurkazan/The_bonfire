@@ -5,6 +5,10 @@ from .forms import PostForm, CommentForm, CustomUserCreationForm, ProfilePicture
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+import deepl
+from django.conf import settings
+
+DEEPL_API_KEY = '18f99540-fef7-4742-b119-fc4255376947:fx'
 
 ##########POSTS###############
 
@@ -153,3 +157,23 @@ def upload_post_picture(request, pk):
         form = PostPictureForm(instance=post)
     return render(request, 'blog/upload_post_picture.html', {'form': form, 'post': post})
 
+#######DEEPL############
+
+def translate_post(request, pk, lang):
+    post = get_object_or_404(Post, pk=pk)
+    translator = deepl.Translator(DEEPL_API_KEY)
+    
+    # Traduce el contenido del post
+    result = translator.translate_text(post.content, target_lang=lang)
+    translated_content = result.text
+    
+    # Traduce el título del post
+    result_title = translator.translate_text(post.title, target_lang=lang)
+    translated_title = result_title.text
+    
+    return render(request, 'blog/post_translate.html', {
+        'post': post,
+        'translated_title': translated_title,
+        'translated_content': translated_content,
+        'language': lang,
+    })
