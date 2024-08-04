@@ -8,6 +8,7 @@
     <ul class="list-group">
         {% for post in posts %}
             <li class="list-group-item">
+                <p><strong>Author:</strong> {{ post.author.nickname }}</p>
                 <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
                 <p>{{ post.content|truncatewords:20 }}</p>
                 <small class="text-muted">{{ post.created_at }}</small>
