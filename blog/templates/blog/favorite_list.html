@@ -1,0 +1,18 @@
+<!-- blog/templates/blog/favorite_list.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Posts Favoritos</h1>
+    <ul class="list-group">
+        {% for favorite in favorites %}
+            <li class="list-group-item">
+                <a href="{% url 'post_detail' favorite.post.pk %}">{{ favorite.post.title }}</a>
+                <p><strong>Keywords:</strong> {{ favorite.post.keywords }}</p>
+                <p><strong>Publication Date:</strong> {{ favorite.post.created_at }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

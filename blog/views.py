@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import Post, Comment
+from .models import Post, Comment, Favorite
 from .forms import PostForm, CommentForm, CustomUserCreationForm
 
 
@@ -15,7 +15,10 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    is_favorited = False
+    if request.user.is_authenticated:
+        is_favorited = Favorite.objects.filter(user=request.user, post=post).exists()
+    return render(request, 'blog/post_detail.html', {'post': post, 'is_favorited': is_favorited})
 
 @login_required
 def post_create(request):
@@ -29,6 +32,21 @@ def post_create(request):
     else:
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
+
+########FAVORITES############
+
+@login_required
+def toggle_favorite(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        favorite.delete()
+    return redirect('post_detail', pk=post.pk)
+
+@login_required
+def favorite_list(request):
+    favorites = Favorite.objects.filter(user=request.user).select_related('post')
+    return render(request, 'blog/favorite_list.html', {'favorites': favorites})
 
 #######COMMENTS####################
 
