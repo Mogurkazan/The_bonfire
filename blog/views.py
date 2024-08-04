@@ -1,11 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from .models import Post, Comment, Favorite, CustomUser
+from .forms import PostForm, CommentForm, CustomUserCreationForm, ProfilePictureForm, PostPictureForm
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import Post, Comment, Favorite
-from .forms import PostForm, CommentForm, CustomUserCreationForm
-
 
 ##########POSTS###############
 
@@ -18,7 +17,17 @@ def post_detail(request, pk):
     is_favorited = False
     if request.user.is_authenticated:
         is_favorited = Favorite.objects.filter(user=request.user, post=post).exists()
-    return render(request, 'blog/post_detail.html', {'post': post, 'is_favorited': is_favorited})
+    
+    favorite_text = 'Unfavorite' if is_favorited else 'Favorite'
+    button_class = 'btn-danger' if is_favorited else 'btn-primary'
+    
+    return render(request, 'blog/post_detail.html', {
+        'post': post,
+        'is_favorited': is_favorited,
+        'favorite_text': favorite_text,
+        'button_class': button_class,
+    })
+
 
 @login_required
 def post_create(request):
@@ -45,8 +54,10 @@ def toggle_favorite(request, pk):
 
 @login_required
 def favorite_list(request):
-    favorites = Favorite.objects.filter(user=request.user).select_related('post')
-    return render(request, 'blog/favorite_list.html', {'favorites': favorites})
+    user = request.user
+    favorite_posts = user.favorite_posts.all()
+    return render(request, 'blog/favorite_list.html', {'favorite_posts': favorite_posts})
+
 
 #######COMMENTS####################
 
@@ -79,3 +90,28 @@ class SignUpView(generic.CreateView):
 def private_area(request):
     posts = Post.objects.filter(author=request.user)
     return render(request, 'blog/private_area.html', {'posts': posts})
+
+##########PICTURES#############
+
+@login_required
+def upload_profile_picture(request):
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('private_area')
+    else:
+        form = ProfilePictureForm(instance=request.user)
+    return render(request, 'blog/upload_profile_picture.html', {'form': form})
+
+@login_required
+def upload_post_picture(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = PostPictureForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = PostPictureForm(instance=post)
+    return render(request, 'blog/upload_post_picture.html', {'form': form, 'post': post})

@@ -1,14 +1,14 @@
-<!-- blog/templates/blog/private_area.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container">
+    <h2>My Private Area</h2>
     <div class="row">
         <div class="col-md-3">
-            <h2>Mis Posts</h2>
-            <a class="btn btn-primary mb-3" href="{% url 'post_create' %}">Crear Nuevo Post</a>
-            <a class="btn btn-secondary mb-3" href="{% url 'favorite_list' %}">Post Favoritos</a>
+            <h3>My Posts</h3>
+            <a href="{% url 'post_create' %}" class="btn btn-primary mb-3">Create New Post</a>
+            <a href="{% url 'upload_profile_picture' %}" class="btn btn-secondary mb-3">Upload Profile Picture</a>
+            <a href="{% url 'favorite_list' %}" class="btn btn-secondary mb-3">Favorite Posts</a>
         </div>
         <div class="col-md-9">
             <ul class="list-group">

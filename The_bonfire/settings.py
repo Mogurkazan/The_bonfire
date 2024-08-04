@@ -1,7 +1,8 @@
-# The_bonfire/settings.py
-
 import os
 from pathlib import Path
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -112,3 +115,12 @@ AUTH_USER_MODEL = 'blog.CustomUser'
 
 LOGIN_REDIRECT_URL = 'private_area'  # Redirigir después de login
 LOGOUT_REDIRECT_URL = 'login'        # Redirigir después de logout
+
+# Cloudinary configuration
+cloudinary.config(
+    cloud_name='dgrclwt1j',
+    api_key='782227289473385',
+    api_secret='vdaEsFk9p6BAWnqewhBPVOgkWvI'
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
