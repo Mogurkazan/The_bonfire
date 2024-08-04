@@ -3,10 +3,12 @@
 {% block content %}
 <div class="container">
     <h2>{{ post.title }}</h2>
-    <p>{{ post.content }}</p>
     {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 100%;">
+    {% else %}
+        <p>No image available for this post.</p>
     {% endif %}
+    <p>{{ post.content }}</p>
     <button class="btn btn-secondary" hx-get="{% url 'load_comments' post.pk %}" hx-target="#comments-container" hx-swap="innerHTML">Comments</button>
     <div id="comments-container"></div>
     <a href="{% url 'toggle_favorite' post.pk %}" class="btn {% if is_favorited %}btn-danger{% else %}btn-primary{% endif %}">

@@ -32,15 +32,26 @@ def post_detail(request, pk):
 @login_required
 def post_create(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            
+            if post.image:
+                print("Image URL:", post.image.url)  # Depuración
+            else:
+                print("No image uploaded.")
+            
             return redirect('post_detail', pk=post.pk)
+        else:
+            print("Form is not valid")
+            print(form.errors)
     else:
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
+
+
 
 ########FAVORITES############
 
@@ -111,7 +122,12 @@ def upload_post_picture(request, pk):
         form = PostPictureForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
+            print("Image URL after save:", post.image.url)  # Depuración
             return redirect('post_detail', pk=post.pk)
+        else:
+            print("Form is not valid")
+            print(form.errors)
     else:
         form = PostPictureForm(instance=post)
     return render(request, 'blog/upload_post_picture.html', {'form': form, 'post': post})
+
