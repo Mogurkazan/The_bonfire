@@ -1,23 +1,14 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container">
-    <h1>Posts</h1>
-    <ul class="list-group">
-        {% for post in posts %}
-            <li class="list-group-item">
-                <p><strong>Author:</strong> {{ post.author.nickname }}</p>
-                {% if post.author.profile_picture %}
-                    <img src="{{ post.author.profile_picture.url }}" alt="{{ post.author.nickname }}" style="max-width: 50px; border-radius: 50%;">
-                {% endif %}
-                <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
-                <p>{{ post.content|truncatewords:20 }}</p>
-                {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 200px;">
-                {% endif %}
-                <small class="text-muted">{{ post.created_at }}</small>
-            </li>
-        {% endfor %}
-    </ul>
+    <form method="get" action="{% url 'search_results' %}" class="form-inline mb-3">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <div id="posts-container">
+        {% include 'blog/post_list_partial.html' %}
+    </div>
 </div>
 {% endblock %}

@@ -5,6 +5,8 @@ from .forms import PostForm, CommentForm, CustomUserCreationForm, ProfilePicture
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from django.db.models import Q
+from django.core.paginator import Paginator
 import deepl
 from django.conf import settings
 
@@ -13,8 +15,22 @@ DEEPL_API_KEY = '18f99540-fef7-4742-b119-fc4255376947:fx'
 ##########POSTS###############
 
 def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | Q(keywords__icontains=query)
+        ).order_by('-created_at')
+    else:
+        posts = Post.objects.all().order_by('-created_at')
+    
+    paginator = Paginator(posts, 5)  # Paginar de 5 en 5 posts
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    if request.htmx:
+        return render(request, 'blog/post_list_partial.html', {'page_obj': page_obj})
+    
+    return render(request, 'blog/post_list.html', {'page_obj': page_obj})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
