@@ -36,9 +36,10 @@
             <img src="{% static 'blog/images/telegram.png' %}" alt="Telegram" width="20"> Share on Telegram
         </a>
     </div>
-
-    <button class="btn btn-secondary" hx-get="{% url 'load_comments' post.pk %}" hx-target="#comments-container" hx-swap="innerHTML">Comments</button>
-    <div id="comments-container"></div>
+    <div x-data="{ open: false }">
+        <button x-on:click="open = ! open" class="btn btn-secondary" hx-get="{% url 'load_comments' post.pk %}" hx-target="#comments-container" hx-swap="innerHTML">Comments</button>
+        <div x-show="open" id="comments-container"></div>
+    </div>
     <a href="{% url 'toggle_favorite' post.pk %}" class="btn {% if is_favorited %}btn-danger{% else %}btn-primary{% endif %}">
         {% if is_favorited %}
             Unfavorite
